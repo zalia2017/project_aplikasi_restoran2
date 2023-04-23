@@ -50,7 +50,7 @@ class Member extends CI_Controller
   {
     $this->form_validation->set_rules('nama', 'Nama Lengkap', 'required', ['required' => 'Nama Belum diisi!!']);
     $this->form_validation->set_rules('alamat', 'Alamat Lengkap', 'required', ['required' => 'Alamat belum diisi!!']);
-    $this->form_validaton->set_rules('email', 'Alamat Email', 'required|trim|valid_email|is_unique[user.email]', [
+    $this->form_validation->set_rules('email', 'Alamat Email', 'required|trim|valid_email|is_unique[user.email]', [
       'valid_email' => 'Email Tidak Benar!!', 
       'required' => 'Email belum diisi!!',
       'is_unique' => 'Email sudah terdaftar!!', 
@@ -70,7 +70,7 @@ class Member extends CI_Controller
       'password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
       'role_id' => 2,
       'is_active' => 1, 
-      'tanggal_input' => $time()
+      'tanggal_input' => time()
     ];
     $this->ModelUser->simpanData($data);
     $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-message" role="alert">Selamat!! akun anggota anda sudah dibuat.</div>');

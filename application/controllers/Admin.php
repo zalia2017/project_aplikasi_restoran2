@@ -22,7 +22,11 @@ class Admin extends CI_Controller
 
         //Mengupdate stok dan dibooking pada tabel buku
 
-        $detail = $this->db->query("SELECT*FROM booking, booking_detail WHERE DAY(curdate()) < DAY(batas_ambil) AND booking.id_booking=booking_detail.id_booking")->result_array();
+        // $detail = $this->db->query("SELECT*FROM booking, booking_detail WHERE DAY(curdate()) < DAY(batas_ambil) AND booking.id_booking=booking_detail.id_booking")->result_array();
+
+        $detail = $this->db->query("SELECT*FROM booking, booking_detail WHERE booking.id_booking=booking_detail.id_booking")->result_array();
+        var_dump($detail);
+        var_dump(count($detail));
 
         foreach($detail as $key){
             $id_buku = $key['id_buku'];
