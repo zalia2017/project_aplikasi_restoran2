@@ -25,8 +25,8 @@ class Admin extends CI_Controller
         // $detail = $this->db->query("SELECT*FROM booking, booking_detail WHERE DAY(curdate()) < DAY(batas_ambil) AND booking.id_booking=booking_detail.id_booking")->result_array();
 
         $detail = $this->db->query("SELECT*FROM booking, booking_detail WHERE booking.id_booking=booking_detail.id_booking")->result_array();
-        var_dump($detail);
-        var_dump(count($detail));
+        // var_dump($detail);
+        // var_dump(count($detail));
 
         foreach($detail as $key){
             $id_buku = $key['id_buku'];
@@ -36,6 +36,7 @@ class Admin extends CI_Controller
             $beda = date_diff($tglawal, $tglskrg);
 
             if($beda->days > 2) {
+                //Mengupdate data stok dan diiboking, dikurangi 1
                 $this->db->query("UPDATE buku SET stok=stok+1, dibooking=dibooking=dibooking-1 WHERE id='$id_buku'");
             }
         }
@@ -50,7 +51,9 @@ class Admin extends CI_Controller
                 $tglskrg = date_create();
                 $beda = date_diff($tglawal, $tglskrg);
 
+
                 if($beda->days > 2){
+                    //Jika lebih dari 2 hari dari tgl booking maka dihapus
                     $this->db->query("DELETE FROM booking WHERE id_booking='$id_booking'");
                     $this->db->query("DELETE FROM booking_detail WHERE id_booking='$id_booking'");
                 }

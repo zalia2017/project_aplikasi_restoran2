@@ -10,6 +10,7 @@
                 <th>ID Booking</th>
                 <th>Tanggal Booking</th>
                 <th>ID User</th>
+                <th>Nama User</th>
                 <th>Aksi</th>
                 <th>Denda / Buku /Hari</th>
                 <th>Lama Pinjam</th>
@@ -24,19 +25,20 @@
 'id_booking']; ?></a></td>
                 <td><?= $p['tgl_booking']; ?></td>
                 <td><?= $p['id_user']; ?></td>
+                <td><?= $p['nama'];?></td>
                 <form action="<?= base_url('pinjam/pinjamAct/
 ' . $p['id_booking']); ?>" method="post">
                   <td nowrap>
-                    <button type="submit" class="btn btn￾sm btn-outline-info"><i class="fas fa-fw fa-cart-plus"></i>
+                    <button type="submit" class="btn btn-sm btn-outline-info"><i class="fas fa-fw fa-cart-plus"></i>
                       Pinjam</button>
                   </td>
                   <td>
-                    <input class="form-check-user rounded-sm" style="width:100px" type="text" name="denda" id="denda"
+                    <input class="form-check-user rounded-sm" style="width:100px" min="0" type="number" name="denda" id="denda"
                       value="5000">
                     <?= form_error(); ?>
                   </td>
                   <td>
-                    <input class="form-check-user rounded-sm" style="width:100px" type="text" name="lama" id="lama"
+                    <input class="form-check-user rounded-sm" style="width:100px" min="1" max="7" type="number" name="lama" id="lama"
                       value="3">
                     <?= form_error(); ?>
                   </td>

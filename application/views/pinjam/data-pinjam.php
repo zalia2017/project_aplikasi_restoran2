@@ -45,8 +45,7 @@
                     } else {
                     $status = "secondary";
                     } ?>
-                <td><i class="btn btn-outline-
-                    <?= $status; ?> btn-sm"><?= $p['status']; ?></i></td>
+                <td><i class="btn btn-outline-<?= $status; ?> btn-sm"><?= $p['status']; ?></i></td>
                 <?php
                     if ($selisih < 0) {
                     $total_denda = $p['denda'] * 0;

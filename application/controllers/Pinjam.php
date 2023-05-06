@@ -13,9 +13,12 @@ class Pinjam extends CI_Controller
 
   public function index()
   {
+    //Untuk judul di tab bar
     $data['judul'] = "Data Pinjam";
+    //Untuk nama user di topbar(pojok kanan)
     $data['user'] = $this->ModelUser->cekData(['email' => $this->session->userdata('email')])->row_array();
 
+    //Untuk data peminjaman dari tabel pinjam
     $data['pinjam'] = $this->ModelPinjam->joinData();
 
     $this->load->view('templates/header', $data);
@@ -29,9 +32,13 @@ class Pinjam extends CI_Controller
   public function daftarBooking()
   {
     $data['judul'] = "Daftar Booking";
+    //row_array -> akan menghasilkan 1 baris di awal saja dalam bentuk array $namaArray['nama_kolomnya']
+    //row -> akan menghasilkan 1 baris dalam bentuk objek
     $data['user'] = $this->ModelUser->cekData(['email' => $this->session->userdata('email')])->row_array();
-    $data['pinjam'] = $this->db->query("SELECT*FROM booking")->result_array();
-
+    //result_array -> akan menghasilkan banyak data dalam bentuk array
+    //result -> akan menghasilkan banyak data dalam bentuk objek, pemanggilannya $namaObjek->nama_field
+    $data['pinjam'] = $this->db->query("SELECT*FROM booking b, user u where b.id_user=u.id")->result_array();
+    // var_dump($data['pinjam']);
     $this->load->view('templates/header', $data);
     $this->load->view('templates/sidebar', $data);
     $this->load->view('templates/topbar', $data);
@@ -57,8 +64,11 @@ class Pinjam extends CI_Controller
 
   public function pinjamAct()
   {
+    //Mendapatkan id_booking dari segment uri 3
     $id_booking = $this->uri->segment(3);
+    //
     $lama = $this->input->post('lama', TRUE);
+    $totalDenda = $this->input->post('denda', TRUE);
 
     $bo = $this->db->query("SELECT*FROM booking WHERE id_booking='$id_booking'")->row();
 
@@ -75,14 +85,21 @@ class Pinjam extends CI_Controller
       'total_denda' => 0
     ];
 
+    //Menyimpan data diatas kedalam tabel pinjam
     $this->ModelPinjam->simpanPinjam($databooking);
+    //Detailnya akan disimpan ke dalam detail_pinjam
     $this->ModelPinjam->simpanDetail($id_booking, $no_pinjam);
+    //Mendapatkan nilai denda
     $denda = $this->input->post('denda', TRUE);
+    //mengupdate data denda sesuai dengan yang diinput oleh admin
     $this->db->query("UPDATE detail_pinjam SET denda='$denda'");
 
+    //Menghapus data dari tabel booking dan tabel booking_detail sesuai id_booking
     $this->ModelPinjam->deleteData('booking', ['id_booking' => $id_booking]);
     $this->ModelPinjam->deleteData('booking_detail', ['id_booking' => $id_booking]);
 
+    //Mengupdate tabel buku untuk mengubah kolom dipinjam dan kolom dibooking
+    //Silahkan diubah disini
     $this->db->query("UPDATE buku, detail_pinjam SET buku.dipinjam=buku.dipinjam+1, buku.dibooking=buku.dibooking-1 WHERE buku.id=detail_pinjam.id_buku");
 
     $this->session->set_flashdata('pesan', '<div class="alert alert-message alert-success" role="alert">Data Peminjaman Berhasil disimpan</div>');
