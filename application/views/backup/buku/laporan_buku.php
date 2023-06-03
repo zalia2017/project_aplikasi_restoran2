@@ -9,13 +9,23 @@
       </div>
       <?php }?>
       <?= $this->session->flashdata('pesan'); ?>
+      <!-- Tombol pertama untuk cetak langsung ke printer -->
+      <!-- Menjalankan controller laporan, method cetak_laporan_buku -->
       <a target="_blank" href="<?= base_url('laporan/cetak_laporan_buku'); ?>" class="btn btn-primary mb-3"><i
           class="fas fa-print"></i>
-        Print</a>
+        Print
+      </a>
+      <!-- Tombol kedua untuk cetak dalam bentuk pdf -->
+      <!-- Menjalankan controller laporan, method laporan_buku_pdf -->
       <a target="_blank" href="<?= base_url('laporan/laporan_buku_pdf'); ?>" class="btn btn-warning mb-3"><i
-          class="far fa-file-pdf"></i> Download Pdf</a>
-      <a href="<?= base_url('laporan/export_excel'); ?>" class="btn btn-success mb-3"><i class="far fa-file-excel"></i>
-        Export ke Excel</a>
+          class="far fa-file-pdf"></i> 
+          Download Pdf
+      </a>
+      <!-- Tombol ketiga untuk cetak dalam bentuk excel -->
+      <!-- Menjalankan controller laporan, method export_excel -->
+      <a href="<?= base_url('laporan/export_excel_anggota'); ?>" class="btn btn-success mb-3"><i class="far fa-file-excel"></i>
+        Export ke Excel
+      </a>
       <table class="table table-hover">
         <thead>
           <tr>
@@ -31,6 +41,7 @@
         <tbody>
           <?php
           $a = 1;
+          //Memunculkan setiap record dari tabel buku ke dalam bentuk html untuk diprint
           foreach ($buku as $b) { ?>
           <tr>
             <th scope="row"><?= $a++; ?></th>

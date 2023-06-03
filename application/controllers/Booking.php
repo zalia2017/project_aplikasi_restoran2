@@ -1,4 +1,4 @@
-z<?php 
+<?php 
 defined('BASEPATH') or exit('No Direct Script Access Allowed');
 date_default_timezone_set('Asia/Jakarta');
 
@@ -13,9 +13,10 @@ class Booking extends CI_Controller
   }
     public function index()
     {
-      $id = ['bo.id_user' => $this->uri->segment(3)];
+      // $id = ['bo.id_user' => $this->uri->segment(3)];
+      // var_dump($id);
       $id_user = $this->session->userdata('id_user');
-      $data['booking'] = $this->ModelBooking->joinOrder($id)->result();
+      // $data['booking'] = $this->ModelBooking->joinOrder($id)->result();
 
       $user = $this->ModelUser->cekData(['email' => $this->session->userdata('email')])->row_array();
 
@@ -47,8 +48,12 @@ class Booking extends CI_Controller
     {
       $id_buku = $this->uri->segment(3);
 
+      //Mengambil semua kolom dari tabel buku dimana idBuku = 15 hanya
+      //untuk 1 record
       $d = $this->db->query("SELECT * FROM buku where id='$id_buku'")->row();
 
+      var_dump($this->session->userdata('id_user'));
+      //Menyimpan data dari $d kedalam $isi
       $isi = [
         'id_buku' => $id_buku, 
         'judul_buku' => $d->judul_buku, 
@@ -61,30 +66,39 @@ class Booking extends CI_Controller
         'tahun_terbit' => $d->tahun_terbit
       ];
 
+      //mendapatkan jumlah record didalam tabel temp apakah sudah ada buku yang dimaksud
       $temp = $this->ModelBooking->getDataWhere('temp', ['id_buku' => $id_buku])->num_rows();
 
+      //Menyimpan id_user kedalam $userId
       $userid = $this->session->userdata('id_user');
 
+      //mendapatkan jumlah record di dalam tabel temp dimana id_user adalah $user_id
       $tempuser = $this->db->query("SELECT*FROM temp WHERE id_user='$userid'")->num_rows();
-
+      //Mendapatkan jumlah record di dalam tabel booking dimana id_user adalah $user_id
       $databooking = $this->db->query("SELECT*FROM booking where id_user='$userid'")->num_rows();
 
+      //Jika jumlah databooking lebih dari 0 atau ada
       if($databooking > 0){
+        //maka error, muncul pesan ada booking yg belum diambil.
         $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-message" role="alert">Masih ada booking buku sebelumnya yang belum diambil.<br> Ambil buku yang dibooking atau tunggu 1x24 jam untuk bisa booking kembali </div>');
+        //Halaman diarahkan ke base_url()
         redirect(base_url());
       }
-
+      //Jika ada id buku yang sama di tabel temp
       if($temp > 0){
+        //Maka akan muncul pesan error, buku ini sudah ada yang booking
         $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-message" role="alert"> Buku ini sudah dibooking </div>');
+        //Halaman diarahkan ke base_url()/home
         redirect(base_url(). 'home');
       }
-
+      //Jika pada tabel temp(keranjang), ada 1 user yang telah berisi
+      //maka akan muncul pesan error, keranjang tidak boleh berisi lebih dari 3
       if ($tempuser == 3) {
         $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-message" role="alert">Booking Buku tidak boleh lebih dari 3</div>');
         
         redirect(base_url(). 'home');
       }
-
+      //Akan membuat record ke tabel temp
       $this->ModelBooking->createTemp();
       $this->ModelBooking->insertData('temp', $isi);
 
@@ -146,7 +160,7 @@ class Booking extends CI_Controller
     {
       $id_user = $this->session->userdata('id_user');
       $data['user'] = $this->session->userdata('nama');
-      $data['judul'] = "Cetak Bukti BOoking";
+      $data['judul'] = "Cetak Bukti Booking";
       $data['useraktif'] = $this->ModelUser->cekData(['id' => $this->session->userdata('id_user')])->result();
 
       $data['items'] = $this->db->query("SELECT*FROM booking bo, booking_detail d, buku bu WHERE d.id_booking = bo.id_booking AND d.id_buku=bu.id and bo.id_user='$id_user'")->result_array();

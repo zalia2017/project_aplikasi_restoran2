@@ -1,17 +1,21 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class ModelBuku extends CI_Model
+class ModelProduk extends CI_Model
 {
-    //manajemen buku
-    public function getBuku()
+    //manajemen kategori
+    public function getProduk()
     {
-        return $this->db->get('buku');
+        return $this->db->get('produk');
+    }
+    public function getProdukWhere($where)
+    {
+        return $this->db->get_where('produk', $where);
     }
 
-    public function bukuWhere($where)
+    public function produkWhere($where)
     {
-        return $this->db->get_where('buku', $where);
+        return $this->db->get_where('produk', $where);
     }
 
     public function simpanBuku($data = null)
@@ -37,17 +41,6 @@ class ModelBuku extends CI_Model
         }
         $this->db->from('buku');
         return $this->db->get()->row($field);
-    }
-    
-    //manajemen kategori
-    public function getKategori()
-    {
-        return $this->db->get('kategori');
-    }
-
-    public function kategoriWhere($where)
-    {
-        return $this->db->get_where('kategori', $where);
     }
 
     public function simpanKategori($data = null)

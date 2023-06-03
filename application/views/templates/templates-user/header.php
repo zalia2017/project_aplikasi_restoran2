@@ -27,22 +27,14 @@
         <div class="navbar-nav">
           <a class="nav-item nav-link active" href="<?= base_url();?>">Beranda <span
               class="sr-only">(current)</span></a>
-          <?php if(!empty($this->session->userdata('email'))) { ?>
-          <a class="nav-item nav-link" href="<?= base_url('booking');?>">Booking
-            <b><?= $this->ModelBooking->getDataWhere('temp', ['email_user' => $this->session->userdata('email')])->num_rows();?></b>
-            Buku</a>
-          <a class="nav-item nav-link" href="<?= base_url('member/myprofil');?>">Profil Saya</a>
-          <a class="nav-item nav-link" href="<?= base_url('member/logout');?>">Logout</a>
-          <?php }else{ ?>
-
-          <a class="nav-item nav-link" data-toggle="modal" data-target="#daftarModal" href="#"><i
-              class="fas fw fa-login"></i> Daftar</a>
-          <a class="nav-item nav-link" data-toggle="modal" data-target="#loginModal" href="#"><i
-              class="fas fw fa-login"></i> Login</a>
-          <?php } ?>
-
-          <span class="nav-item nav-link nav-right" style="display:block; ;margin-left:20px;">Selamat Datang
-            &nbsp;&nbsp<b><?= $user; ?></b></span>
+          <?php foreach($kategori as $kategori): ?>
+            <a class="nav-item nav-link" href="<?= base_url('produk/kategori/'.$kategori->id);?>"><?=$kategori->nama_kategori;?></a>
+          <?php endforeach;?>
+         
+          <a class="nav-item nav-link" href="<?= base_url('pesanan');?>">Pesanan
+            <b><?= $this->ModelPesanan->getDataWhere('temp', ['id_session' => $this->session->userdata('id')])->num_rows();?></b>
+            Item</a>
+          <a class="nav-item nav-link" href="<?= base_url('member/logout');?>">Cancel</a>
         </div>
       </div>
     </div>

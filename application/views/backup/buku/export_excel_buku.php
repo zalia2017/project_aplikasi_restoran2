@@ -5,7 +5,7 @@ header("Pragma: no-cache");
 header("Expires: 0");
 ?>
 
-<h3><center>Laporan Data Buku Perpustakanan Online</center></h3>
+<h3><center>Laporan Data Buku Perpustakaan Online</center></h3>
 <br/>
 <table class="table-data">
   <thead>

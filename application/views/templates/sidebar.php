@@ -6,7 +6,7 @@
             <div class="sidebar-brand-icon rotate-n-15">
               <i class="fas fa-book"></i>
             </div>
-            <div class="sidebar-brand-text mx-3">Pustaka Booking</div>
+            <div class="sidebar-brand-text mx-3">MacDee Restaurant</div>
           </a>
 
           <!-- Divider -->
@@ -37,21 +37,22 @@
           <!-- Nav Item - Dashboard -->
           <li class="nav-item active">
             <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+            <a class="nav-link pb-0" href="<?= base_url('user/daftar_user'); ?>">
+              <i class="fa fa-fw fa-users"></i>
+              <span>Data User</span></a>
+          </li>
           <li class="nav-item">
-            <a class="nav-link pb-0" href="<?= base_url('buku/kategori'); ?>">
+            <a class="nav-link pb-0" href="<?= base_url('kategori'); ?>">
               <i class="fa fa-fw fa-list"></i>
-              <span>Kategori Buku</span></a>
+              <span>Data Kategori</span></a>
           </li>
           <li class="nav-item">
             <a class="nav-link pb-0" href="<?= base_url('buku'); ?>">
               <i class="fa fa-fw fa-book"></i>
-              <span>Data Buku</span></a>
+              <span>Data Produk</span></a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link pb-0" href="<?= base_url('user/anggota'); ?>">
-              <i class="fa fa-fw fa-users"></i>
-              <span>Data Anggota</span></a>
-          </li>
+
           </li>
           <!-- Divider -->
           <hr class="sidebar-divider mt-3">

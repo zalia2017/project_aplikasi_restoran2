@@ -34,17 +34,18 @@ class Autentifikasi extends CI_Controller
         $email = htmlspecialchars($this->input->post('email', true));
         $password = $this->input->post('password', true);
 
-        $user = $this->ModelUser->cekData(['email' => $email])->row_array();
+        $user = $this->ModelUser->cekData(['email_user' => $email])->row_array();
 
         //jika usernya ada
         if ($user) {
             //jika user sudah aktif
-            if ($user['is_active'] == 1) {
+            if ($user['is_active'] == '1') {
                 //cek password
-                if (password_verify($password, $user['password'])) {
+                if (password_verify($password, $user['password_user'])) {
                     $data = [
-                        'email' => $user['email'],
-                        'role_id' => $user['role_id']
+                        'email' => $user['email_user'],
+                        'role_id' => $user['role_id'],
+                        'id_user' => $user['id'],
                     ];
 
                     $this->session->set_userdata($data);
@@ -78,7 +79,7 @@ class Autentifikasi extends CI_Controller
         //yaitu jika format email tidak benar maka pesannya 'Email Tidak Benar!!'. jika email belum diisi,
         //maka pesannya adalah 'Email Belum diisi', dan jika email yang diinput sudah dipakai user lain,
         //maka pesannya 'Email Sudah dipakai'
-        $this->form_validation->set_rules('email', 'Alamat Email', 'required|trim|valid_email|is_unique[user.email]', [
+        $this->form_validation->set_rules('email', 'Alamat Email', 'required|trim|valid_email|is_unique[user.email_user]', [
             'valid_email' => 'Email Tidak Benar!!',
             'required' => 'Email Belum diisi!!',
             'is_unique' => 'Email Sudah Terdaftar!'
@@ -104,12 +105,12 @@ class Autentifikasi extends CI_Controller
         } else {
             $email = $this->input->post('email', true);
             $data = [
-                'nama' => htmlspecialchars($this->input->post('nama', true)),
-                'email' => htmlspecialchars($email),
-                'image' => 'default.jpg',
-                'password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
-                'role_id' => 2,
-                'is_active' => 1,
+                'nama_user' => htmlspecialchars($this->input->post('nama', true)),
+                'email_user' => htmlspecialchars($email),
+                'foto_user' => 'default.jpg',
+                'password_user' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
+                'role_id' => 1,
+                'is_active' => '1',
                 'tanggal_input' => time()
             ];
 

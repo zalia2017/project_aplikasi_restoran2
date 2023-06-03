@@ -108,15 +108,26 @@ class Pinjam extends CI_Controller
 
   public function ubahStatus()
   {
+    //Segment 3 untuk data dari id_buku
     $id_buku = $this->uri->segment(3);
+    //Segment 4 untuk data dari no_pinjam
     $no_pinjam = $this->uri->segment(4);
     $where = ['id_buku' => $this->uri->segment(3),];
 
+    //date untuk mendapatkan data tanggal hari ini. Y : tahun, m: bulan, d: hari
     $tgl =date('Y-m-d');
     $status = 'Kembali';
 
     //Update status menjadi kembali pada saat buku dikembalikan
-    $this->db->query("UPDATE pinjam, detail_pinjam SET pinjam.status='$status', pinjam.tgl_pengembalian='$tgl' WHERE detail_pinjam.id_buku='$id_buku' AND pinjam.no_pinjam='$no_pinjam'");
+    //Akan mengupdate tabel pinjam, tabel detail_pinjam dengan mengubah kolom status
+    //pada tabel pinjam menjadi 'Kembali' dan kolom tgl_pengembalian dari tabel pinjam 
+    //diisi dengan hari ini WHERE(dimana) id_buku pada detail_pinjam = $id_buku dan 
+    //no_pinjam pada tabel pinjam = $no_pinjam
+
+    // $this->db->query("UPDATE pinjam, detail_pinjam SET pinjam.status='$status', pinjam.tgl_pengembalian='$tgl' WHERE detail_pinjam.id_buku='$id_buku' AND pinjam.no_pinjam='$no_pinjam'");
+
+    $this->db->query("UPDATE pinjam SET pinjam.status='$status', pinjam.
+    tgl_pengembalian='$tgl' WHERE pinjam.no_pinjam='$no_pinjam'");
 
     //update stok dan dipinjam pada tabel buku
     $this->db->query("UPDATE buku, detail_pinjam SET buku.dipinjam=buku.dipinjam-1, buku.stok=buku.stok+1 WHERE buku.id=detail_pinjam.id_buku");

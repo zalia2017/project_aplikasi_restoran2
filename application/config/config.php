@@ -23,7 +23,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost:8088/bsi/projek-materi-wp3-ubsi/';
+// $config['base_url'] = 'http://localhost:8088/bsi/projek-materi-wp3-ubsi/';
+//isset : terisi
+//jika $_SERVER['HTTPS'] ada nilainya maka $root = https://
+//jika tidak ada isinya, maka nilai $root = http://
+$root = (isset($_SERVER['HTTPS']) ? "https://" : "http://").$_SERVER['HTTP_HOST'];
+// var_dump($root);
+// var_dump($_SERVER['SCRIPT_NAME']);
+// var_dump(basename($_SERVER['SCRIPT_NAME']));
+//$root akan ditambahkan str_replace
+$root.= str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
+
+$config['base_url'] = $root;
+// var_dump($root);
+// var_dump($_SERVER['HTTPS']);
+// var_dump($_SERVER['HTTP_HOST']);
+// var_dump(basename($_SERVER['SCRIPT_NAME']));
+// var_dump(($_SERVER['SCRIPT_NAME']));
+// var_dump($root);
 
 /*
 |--------------------------------------------------------------------------

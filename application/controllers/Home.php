@@ -5,37 +5,31 @@ class Home extends CI_Controller
   function __construct()
   {
     parent::__construct();
-    $this->load->model(['ModelBuku', 'ModelUser']);
+    $this->load->model(['ModelUser']);
   }
 
   public function index()
   {
+    //Menyiapkan data
     $data = [
-      'judul' => 'Katalog Buku', 
-      'buku' => $this->ModelBuku->getBuku()->result()
+      'judul' => 'Halaman Pesanan', 
+      'kategori' => $this->ModelKategori->getKategori()->result()
     ];
     $data['user'] = 'Pengunjung';
-    if($this->session->userdata('email')){
-      $user = $this->ModelUser->cekData(['email' => $this->session->userdata('email')])->row_array();
-
-      $data['user'] = $user['nama'];
-
+    //Jika sudah berhasil login, session email akan ada isinya
       $this->load->view('templates/templates-user/header', $data);
-      $this->load->view('buku/daftarbuku', $data);
+      $this->load->view('kategori/daftarKategori', $data);
       $this->load->view('templates/templates-user/modal', $data);
       $this->load->view('templates/templates-user/footer', $data);
-    }else{
-      $this->load->view('templates/templates-user/header', $data);
-      $this->load->view('buku/daftarbuku', $data);
-      $this->load->view('templates/templates-user/modal', $data);
-      $this->load->view('templates/templates-user/footer', $data);
-    }
   }
 
-  public function detailBuku()
+  public function detailProduk()
   {
+    //segment 1 : Controller
+    //segment 2 : method/function
+    //segment 3 dan seterusnya : parameter
     $id = $this->uri->segment(3);
-    $buku = $this->ModelBuku->joinKategoriBuku(['buku.id' => $id])->result();
+    $buku = $this->ModelProduk->joinKategoriProduk(['produk.id' => $id])->result();
     $data['user'] = "Pengunjung";
     $data['title'] = "Detail Buku";
 
