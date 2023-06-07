@@ -49,7 +49,7 @@ class User extends CI_Controller
             $this->load->view('templates/header', $data);
             $this->load->view('templates/sidebar', $data);
             $this->load->view('templates/topbar', $data);
-            $this->load->view('user/ubah-profile', $data);
+            $this->load->view('admin/user/ubah-profile', $data);
             $this->load->view('templates/footer');
         } else {
             $nama = $this->input->post('nama', true);
@@ -70,7 +70,6 @@ class User extends CI_Controller
 
                 if ($this->upload->do_upload('image')) {
                     $gambar_lama = $data['user']['foto_user'];
-                    var_dump($gambar_lama);
                     if ($gambar_lama != 'default.jpg') {
                         unlink(FCPATH . 'assets/img/profile/' . $gambar_lama);
                     }

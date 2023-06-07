@@ -84,8 +84,8 @@
   <div class="row">
     <div class="table-responsive table-bordered col-sm-5 ml-auto mr-auto mt-2">
       <div class="page-header">
-        <span class="fas fa-users text-primary mt-2 "> Data User</span>
-        <a class="text-danger" href="<?php echo base_url('user/data_user'); ?>"><i class="fas fa-search mt-2 float-right"> Tampilkan</i></a>
+        <span class="fas fa-users text-primary mt-2 "> Data Kategori</span>
+        <a class="text-danger" href="<?php echo base_url('kategori'); ?>"><i class="fas fa-search mt-2 float-right"> Tampilkan</i></a>
       </div>
       <table class="table mt-3">
         <thead>
@@ -98,11 +98,16 @@
         <tbody>
           <?php
           $i = 1;
-          foreach ($kategori as $a) { ?>
+          foreach ($kategori as $k) { ?>
             <tr>
               <td><?= $i++; ?></td>
-              <td><?= $a['nama_kategori']; ?></td>
-              <td><?= $a['image_kategori']; ?></td>
+              <td><?= $k['nama_kategori']; ?></td>
+              <td align="center">
+              <picture>
+                                    <source srcset="" type="image/svg+xml">
+                                    <img src="<?= base_url('assets/img/upload/') . $k['image_kategori']; ?>" class="img-fluid img-thumbnail" alt="..." style="width:60px;height:80px;">
+                                </picture>
+            </td>
             </tr>
           <?php } ?>
         </tbody>

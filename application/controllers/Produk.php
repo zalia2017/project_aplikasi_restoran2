@@ -6,258 +6,164 @@ class Produk extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        // cek_login();
-        // cek_user();
+        cek_login();
+        cek_user();
+        $this->load->model('ModelKategori');
     }
 
-    public function kategori()
-    {
-        $idKategori = $this->uri->segment(3);
-        $namaKategori = $this->ModelKategori->getKategoriWhere(['id'=>$idKategori])->row()->nama_kategori;
-        $data['judul'] = $namaKategori;
-        $data['kategori'] = $this->ModelKategori->getKategori()->result();
-        $data['produk'] = $this->ModelProduk->getProdukWhere(['id_kategori'=>$idKategori])->result_array();
-
-        $this->load->view('templates/templates-user/header',$data);
-        $this->load->view('produk/daftarProduk', $data);
-        $this->load->view('templates/templates-user/modal');
-        $this->load->view('templates/templates-user/footer');
-    }
-
-
-    //manajemen Buku
+    /**
+     * 4 Method pengelolaan produk
+     * 1. Menampilkan data produk
+     * 2. Menambahkan data produk
+     * 3. Mengedit data produk
+     * 4. Menghapus data produk
+     */
     public function index()
     {
-        $data['judul'] = 'Data Buku';
-        $data['user'] = $this->ModelUser->cekData(['email' => $this->session->userdata('email')])->row_array();
-        $data['buku'] = $this->ModelBuku->getBuku()->result_array();
-        $data['kategori'] = $this->ModelBuku->getKategori()->result_array();
+        $data['judul'] = 'Daftar Produk';
+        $data['produk'] = $this->ModelProduk->getProduk()->result_array();
+        $data['kategori'] = $this->ModelKategori->getKategori()->result_array();
+        $data['user'] = $this->ModelUser->cekData(['email_user' => $this->session->userdata('email')])->row_array();
 
-        $this->form_validation->set_rules('judul_buku', 'Judul Buku', 'required|min_length[3]', [
-            'required' => 'Judul Buku harus diisi',
-            'min_length' => 'Judul buku terlalu pendek'
-        ]);
-        $this->form_validation->set_rules('id_kategori', 'Kategori', 'required', [
-            'required' => 'Nama pengarang harus diisi',
-        ]);
-        $this->form_validation->set_rules('pengarang', 'Nama Pengarang', 'required|min_length[3]', [
-            'required' => 'Nama pengarang harus diisi',
-            'min_length' => 'Nama pengarang terlalu pendek'
-        ]);
-        $this->form_validation->set_rules('penerbit', 'Nama Penerbit', 'required|min_length[3]', [
-            'required' => 'Nama penerbit harus diisi',
-            'min_length' => 'Nama penerbit terlalu pendek'
-        ]);
-        $this->form_validation->set_rules('tahun', 'Tahun Terbit', 'required|min_length[3]|max_length[4]|numeric', [
-            'required' => 'Tahun terbit harus diisi',
-            'min_length' => 'Tahun terbit terlalu pendek',
-            'max_length' => 'Tahun terbit terlalu panjang',
-            'numeric' => 'Hanya boleh diisi angka'
-        ]);
-        $this->form_validation->set_rules('isbn', 'Nomor ISBN', 'required|min_length[3]|numeric', [
-            'required' => 'Nama ISBN harus diisi',
-            'min_length' => 'Nama ISBN terlalu pendek',
-            'numeric' => 'Yang anda masukan bukan angka'
-        ]);
-        $this->form_validation->set_rules('stok', 'Stok', 'required|numeric', [
-            'required' => 'Stok harus diisi',
-            'numeric' => 'Yang anda masukan bukan angka'
-        ]);
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('admin/produk/daftarProduk', $data);
+        $this->load->view('templates/footer');
+    }
 
-        //konfigurasi sebelum gambar diupload
-        $config['upload_path'] = './assets/img/upload/';
-        $config['allowed_types'] = 'jpg|png|jpeg';
-        $config['max_size'] = '3000';
-        $config['max_width'] = '1024';
-        $config['max_height'] = '1000';
-        $config['file_name'] = 'img' . time();
-
-        $this->load->library('upload', $config);
+    public function tambahProduk()
+    {
+        $this->form_validation->set_rules('produk', 'Nama Produk', 'required|min_length[3]', [
+            'required' => 'Nama Produk harus diisi',
+            'min_length' => 'Nama Produk terlalu pendek'
+        ]);
+        $this->form_validation->set_rules('satuan', 'Satuan Produk', 'required|min_length[2]', [
+            'required' => 'Nama Satuan harus diisi',
+            'min_length' => 'Nama Satuan terlalu pendek'
+        ]);
+        $this->form_validation->set_rules('harga', 'Harga Produk', 'required', [
+            'required' => 'Harga Produk harus diisi',
+        ]);
+        $this->form_validation->set_rules('deskripsi', 'Deskripsi Produk', 'required|min_length[3]', [
+            'required' => 'Deskripsi Produk harus diisi',
+            'min_length' => 'Deskripsi Produk terlalu pendek'
+        ]);
 
         if ($this->form_validation->run() == false) {
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-message" role="alert">Gagal Menyimpan, ada data yang kurang lengkap </div>');
+                    redirect('produk');
+        } else {
+            // jika ada gambar yang akan diupload
+            $upload_image = $_FILES['image']['name'];
+            if ($upload_image) {
+                $config['upload_path'] = './assets/img/upload/';
+                $config['allowed_types'] = 'gif|jpg|png|jpeg';
+                $config['max_size']     = '3000';
+                $config['max_width'] = '10000';
+                $config['max_height'] = '10000';
+                $config['file_name'] = 'img' . time();
+
+                $this->load->library('upload', $config);
+
+                if($this->upload->do_upload('image')) {
+                    $data = [
+                           'nama_produk' => $this->input->post('produk', TRUE),
+                           'satuan_produk' => $this->input->post('satuan', TRUE),
+                           'harga_produk' => $this->input->post('harga', TRUE),
+                           'desk_produk' => $this->input->post('deskripsi', TRUE),
+                           'id_kategori' => $this->input->post('kategori', TRUE),
+                           'image_produk' => $this->upload->data('file_name')
+                    ];
+                    $this->ModelProduk->simpanProduk($data);
+                    $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-message" role="alert">Produk berhasil ditambahkan</div>');
+                    redirect('produk');
+                }else {
+                    $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-message" role="alert">Gagal Menyimpan </div>');
+                    redirect('produk');
+                 }
+            }
+        }
+    }
+
+    public function ubahProduk()
+    {
+        $idProduk = $this->uri->segment(3);
+        $data['judul'] = 'Ubah Produk';
+        $data['user'] = $this->ModelUser->cekData(['email_user' => $this->session->userdata('email')])->row_array();
+        $data['kategori'] = $this->ModelKategori->getKategori()->result_array();
+        $data['produk'] = $this->ModelProduk->getProdukWhere(['produk.id'=>$idProduk])->row_array();
+        $this->form_validation->set_rules('produk', 'Nama Produk', 'required|min_length[3]', [
+            'required' => 'Nama Produk harus diisi',
+            'min_length' => 'Nama Produk terlalu pendek'
+        ]);
+        $this->form_validation->set_rules('satuan', 'Satuan Produk', 'required|min_length[2]', [
+            'required' => 'Nama Satuan harus diisi',
+            'min_length' => 'Nama Satuan terlalu pendek'
+        ]);
+        $this->form_validation->set_rules('harga', 'Harga Produk', 'required', [
+            'required' => 'Harga Produk harus diisi',
+        ]);
+        $this->form_validation->set_rules('deskripsi', 'Deskripsi Produk', 'required|min_length[3]', [
+            'required' => 'Deskripsi Produk harus diisi',
+            'min_length' => 'Deskripsi Produk terlalu pendek'
+        ]);
+        $gambarBaru = "";
+
+        if ($this->form_validation->run() === false) {
             $this->load->view('templates/header', $data);
             $this->load->view('templates/sidebar', $data);
             $this->load->view('templates/topbar', $data);
-            $this->load->view('buku/index', $data);
+            $this->load->view('admin/produk/ubah_produk', $data);
             $this->load->view('templates/footer');
-        } else {
-            if ($this->upload->do_upload('image')) {
-                $image = $this->upload->data();
-                $gambar = $image['file_name'];
-            } else {
-                $gambar = '';
+        } else {;
+            // jika ada gambar yang akan diupload
+            $upload_image = $_FILES['image']['name'];
+            if ($upload_image) {
+                $config['upload_path'] = './assets/img/upload/';
+                $config['allowed_types'] = 'gif|jpg|png|jpeg';
+                $config['max_size']     = '3000';
+                $config['max_width'] = '10000';
+                $config['max_height'] = '10000';
+                $config['file_name'] = 'img' . time();
+
+                $this->load->library('upload', $config);
+
+                if($this->upload->do_upload('image')) {
+                    $gambar_lama = $data['produk']['image_produk'];
+                    $gambarBaru = $this->upload->data('file_name');
+                    if ($gambar_lama != 'default.jpg' || $gambar_lama != $gambarBaru) {
+                        unlink(FCPATH . 'assets/img/upload/' . $gambar_lama);
+                    }
+                    
+                    
+                }else {
+                    $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-message" role="alert">Gagal </div>');
+                    redirect('produk');
+                 }
             }
 
-            $data = [
-                'judul_buku' => $this->input->post('judul_buku', true),
-                'id_kategori' => $this->input->post('id_kategori', true),
-                'pengarang' => $this->input->post('pengarang', true),
-                'penerbit' => $this->input->post('penerbit', true),
-                'tahun_terbit' => $this->input->post('tahun', true),
-                'isbn' => $this->input->post('isbn', true),
-                'stok' => $this->input->post('stok', true),
-                'dipinjam' => 0,
-                'dibooking' => 0,
-                'image' => $gambar
+            $myData = [
+                'nama_produk' => $this->input->post('produk', TRUE),
+                'satuan_produk' => $this->input->post('satuan', TRUE),
+                'harga_produk' => $this->input->post('harga', TRUE),
+                'desk_produk' => $this->input->post('deskripsi', TRUE),
+                'id_kategori' => $this->input->post('kategori', TRUE),
             ];
-
-            $this->ModelBuku->simpanBuku($data);
-            redirect('buku');
-        }
-    }
-
-    public function hapusBuku()
-    {
-        $where = ['id' => $this->uri->segment(3)];
-        $this->ModelBuku->hapusBuku($where);
-        redirect('buku');
-    }
-
-    public function ubahBuku()
-    {
-        $data['judul'] = 'Ubah Data Buku';
-        $data['user'] = $this->ModelUser->cekData(['email' => $this->session->userdata('email')])->row_array();
-        $data['buku'] = $this->ModelBuku->bukuWhere(['id' => $this->uri->segment(3)])->result_array();
-        $kategori = $this->ModelBuku->joinKategoriBuku(['buku.id' => $this->uri->segment(3)])->result_array();
-        foreach ($kategori as $k) {
-            $data['id'] = $k['id_kategori'];
-            $data['k'] = $k['kategori'];
-        }
-        $data['kategori'] = $this->ModelBuku->getKategori()->result_array();
-
-        $this->form_validation->set_rules('judul_buku', 'Judul Buku', 'required|min_length[3]', [
-            'required' => 'Judul Buku harus diisi',
-            'min_length' => 'Judul buku terlalu pendek'
-        ]);
-        $this->form_validation->set_rules('id_kategori', 'Kategori', 'required', [
-            'required' => 'Nama pengarang harus diisi',
-        ]);
-        $this->form_validation->set_rules('pengarang', 'Nama Pengarang', 'required|min_length[3]', [
-            'required' => 'Nama pengarang harus diisi',
-            'min_length' => 'Nama pengarang terlalu pendek'
-        ]);
-        $this->form_validation->set_rules('penerbit', 'Nama Penerbit', 'required|min_length[3]', [
-            'required' => 'Nama penerbit harus diisi',
-            'min_length' => 'Nama penerbit terlalu pendek'
-        ]);
-        $this->form_validation->set_rules('tahun', 'Tahun Terbit', 'required|min_length[3]|max_length[4]|numeric', [
-            'required' => 'Tahun terbit harus diisi',
-            'min_length' => 'Tahun terbit terlalu pendek',
-            'max_length' => 'Tahun terbit terlalu panjang',
-            'numeric' => 'Hanya boleh diisi angka'
-        ]);
-        $this->form_validation->set_rules('isbn', 'Nomor ISBN', 'required|min_length[3]|numeric', [
-            'required' => 'Nama ISBN harus diisi',
-            'min_length' => 'Nama ISBN terlalu pendek',
-            'numeric' => 'Yang anda masukan bukan angka'
-        ]);
-        $this->form_validation->set_rules('stok', 'Stok', 'required|numeric', [
-            'required' => 'Stok harus diisi',
-            'numeric' => 'Yang anda masukan bukan angka'
-        ]);
-
-        //konfigurasi sebelum gambar diupload
-        $config['upload_path'] = './assets/img/upload/';
-        $config['allowed_types'] = 'jpg|png|jpeg';
-        $config['max_size'] = '3000';
-        $config['max_width'] = '1024';
-        $config['max_height'] = '1000';
-        $config['file_name'] = 'img' . time();
-
-        //memuat atau memanggil library upload
-        $this->load->library('upload', $config);
-
-        if ($this->form_validation->run() == false) {
-            $this->load->view('templates/header', $data);
-            $this->load->view('templates/sidebar', $data);
-            $this->load->view('templates/topbar', $data);
-            $this->load->view('buku/ubah_buku', $data);
-            $this->load->view('templates/footer');
-        } else {
-            if ($this->upload->do_upload('image')) {
-                $image = $this->upload->data();
-                unlink('assets/img/upload/' . $this->input->post('old_pict', TRUE));
-                $gambar = $image['file_name'];
-            } else {
-                $gambar = $this->input->post('old_pict', TRUE);
+            if($gambarBaru != ""){
+                $myData['image_produk'] = $gambarBaru;
             }
-
-            $data = [
-                'judul_buku' => $this->input->post('judul_buku', true),
-                'id_kategori' => $this->input->post('id_kategori', true),
-                'pengarang' => $this->input->post('pengarang', true),
-                'penerbit' => $this->input->post('penerbit', true),
-                'tahun_terbit' => $this->input->post('tahun', true),
-                'isbn' => $this->input->post('isbn', true),
-                'stok' => $this->input->post('stok', true),
-                'image' => $gambar
-            ];
-
-            $this->ModelBuku->updateBuku($data, ['id' => $this->input->post('id')]);
-            redirect('buku');
+            $this->ModelProduk->updateProduk($myData, ['id' => $idProduk]);
+            $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-message" role="alert">Produk berhasil diubah</div>');
+            redirect('produk');
         }
     }
-
-    // //manajemen kategori
-    // public function kategori()
-    // {
-    //     $data['judul'] = 'Kategori Buku';
-    //     $data['user'] = $this->ModelUser->cekData(['email' => $this->session->userdata('email')])->row_array();
-    //     $data['kategori'] = $this->ModelBuku->getKategori()->result_array();
-
-    //     $this->form_validation->set_rules('kategori', 'Kategori', 'required', [
-    //         'required' => 'Judul Buku harus diisi'
-    //     ]);
-
-    //     if ($this->form_validation->run() == false) {
-    //         $this->load->view('templates/header', $data);
-    //         $this->load->view('templates/sidebar', $data);
-    //         $this->load->view('templates/topbar', $data);
-    //         $this->load->view('buku/kategori', $data);
-    //         $this->load->view('templates/footer');
-    //     } else {
-    //         $data = [
-    //             'kategori' => $this->input->post('kategori', TRUE)
-    //         ];
-
-    //         $this->ModelBuku->simpanKategori($data);
-    //         redirect('buku/kategori');
-    //     }
-    // }
-
-    public function ubahKategori()
-    {
-        $data['judul'] = 'Ubah Data Kategori';
-        $data['user'] = $this->ModelUser->cekData(['email' => $this->session->userdata('email')])->row_array();
-        $data['kategori'] = $this->ModelBuku->kategoriWhere(['id' => $this->uri->segment(3)])->result_array();
-
-
-        $this->form_validation->set_rules('kategori', 'Nama Kategori', 'required|min_length[3]', [
-            'required' => 'Nama Kategori harus diisi',
-            'min_length' => 'Nama Kategori terlalu pendek'
-        ]);
-
-        if ($this->form_validation->run() == false) {
-            $this->load->view('templates/header', $data);
-            $this->load->view('templates/sidebar', $data);
-            $this->load->view('templates/topbar', $data);
-            $this->load->view('buku/ubah_kategori', $data);
-            $this->load->view('templates/footer');
-        } else {
-
-            $data = [
-                'kategori' => $this->input->post('kategori', true)
-            ];
-
-            $this->ModelBuku->updateKategori(['id' => $this->input->post('id')], $data);
-            redirect('buku/kategori');
-        }
-    }
-
-    public function hapusKategori()
+  
+    public function hapusProduk()
     {
         $where = ['id' => $this->uri->segment(3)];
-        $this->ModelBuku->hapusKategori($where);
-        redirect('buku/kategori');
+        $this->ModelProduk->hapusProduk($where);
+        $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-message" role="alert">Produk berhasil dihapus</div>');
+        redirect('produk');
     }
 }

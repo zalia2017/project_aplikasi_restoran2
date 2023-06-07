@@ -48,7 +48,7 @@
               <span>Data Kategori</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link pb-0" href="<?= base_url('buku'); ?>">
+            <a class="nav-link pb-0" href="<?= base_url('produk'); ?>">
               <i class="fa fa-fw fa-book"></i>
               <span>Data Produk</span></a>
           </li>
@@ -65,14 +65,9 @@
           <li class="nav-item active">
           <li class="nav-item">
             <a href="<?= base_url('pinjam');?>" class="nav-link pb-0"><i class="fa fa-fw fa-shopping-cart"></i>
-              <span>Data Peminjaman</span></a>
+              <span>Data Pesanan</span></a>
           </li>
-          <li class="nav-item"><a href="<?= base_url('pinjam/daftarBooking');?>" class="nav-link pb-0"><i
-                class="fa fa-fw fa-list"></i>
-              <span>Data Booking</span>
-            </a>
-          </li>
-          </li>
+            </li>
 
 
           <!-- Divider -->
@@ -87,19 +82,19 @@
           <li class="nav-item">
             <a class="nav-link pb-0" href="<?= base_url('laporan/laporan_buku');?>">
               <i class="fa fa-fw fa-address-book"></i>
-              <span>Laporan Data Buku</span>
+              <span>Laporan Data Kategori</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link pb-0" href="<?= base_url('laporan/laporan_anggota');?>">
               <i class="fa fa-fw fa-address-book"></i>
-              <span>Laporan Data Anggota</span>
+              <span>Laporan Data Produk</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link pb-0" href="<?= base_url('laporan/laporan_pinjam');?>">
               <i class="fa fa-fw fa-address-book"></i>
-              <span>Laporan Data Peminjaman</span>
+              <span>Laporan Data Pesanan</span>
             </a>
           </li>
           </li>

@@ -49,6 +49,7 @@ class Autentifikasi extends CI_Controller
                     ];
 
                     $this->session->set_userdata($data);
+                    //Diarahkan ke controller admin
                     redirect('admin');
                 } else {
                     $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-message" role="alert">Password salah!!</div>');

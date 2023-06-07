@@ -3,13 +3,12 @@
 
     <?= $this->session->flashdata('pesan'); ?>
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-8">
             <?php if (validation_errors()) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= validation_errors(); ?>
                 </div>
             <?php } ?>
-            <?= $this->session->flashdata('pesan'); ?>
             <a href="" class="btn btn-primary mb-3" data-toggle="modal" data-target="#kategoriBaruModal"><i class="fas fa-file-alt"></i> Tambah Kategori</a>
             <table class="table table-hover">
                 <thead>
@@ -30,12 +29,12 @@
                             <td><?= $k['nama_kategori']; ?></td>
                             <td><picture>
                                     <source srcset="" type="image/svg+xml">
-                                    <img src="<?= base_url('assets/img/profile/') . $a['foto_user']; ?>" class="img-fluid img-thumbnail" alt="..." style="width:60px;height:80px;">
+                                    <img src="<?= base_url('assets/img/upload/') . $k['image_kategori']; ?>" class="img-fluid img-thumbnail" alt="..." style="width:60px;height:80px;">
                                 </picture>
                     </td>
                             <td>
-                                <a href="<?= base_url('kategori/ubahkategori/') . $k['id']; ?>" class="badge badge-info"><i class="fas fa-edit"></i> Ubah</a>
-                                <a href="<?= base_url('kategori/hapuskategori/') . $k['id']; ?>" onclick="return confirm('Kamu yakin akan menghapus <?= $judul . ' ' . $k['nama_kategori']; ?> ?');" class="badge badge-danger"><i class="fas fa-trash"></i> Hapus</a>
+                                <a href="<?= base_url('kategori/ubahKategori/') . $k['id']; ?>" class="badge badge-info"><i class="fas fa-edit"></i> Ubah</a>
+                                <a href="<?= base_url('kategori/hapusKategori/') . $k['id']; ?>" onclick="return confirm('Kamu yakin akan menghapus <?= $judul . ' ' . $k['nama_kategori']; ?> ?');" class="badge badge-danger"><i class="fas fa-trash"></i> Hapus</a>
                             </td>
                         </tr>
                     <?php } ?>
@@ -60,10 +59,13 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="<?= base_url('buku/kategori'); ?>" method="post">
+            <form action="<?= base_url('kategori/tambahKategori'); ?>" method="post"  enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="form-group">
                         <input type="text" name="kategori" id="kategori" placeholder="Masukkan Nama Kategori" class="form-control form-control-user">
+                    </div>
+                    <div class="form-group">
+                        <input type="file" class="form-control form-control-user" id="image" name="image">
                     </div>
                 </div>
                 <div class="modal-footer">

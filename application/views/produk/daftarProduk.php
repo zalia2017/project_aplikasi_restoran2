@@ -11,7 +11,7 @@
             foreach($produk as $produk) : ?>
         <div class="col-md-2 col-md-3">
           <div class="thumbnail" style="height: 370px;">
-          <a class="nav-item nav-link" href="<?= base_url('produk/'.$produk['id']);?>">
+          <a class="nav-item nav-link" href="<?= base_url('home/produk/'.$produk['id']);?>">
             <img src="<?= base_url('assets/img/upload/'.$produk['image_produk']);?>"
               style="max-width:100%;max-height: 100%; height: 200px; width: 180px">
         </a>
