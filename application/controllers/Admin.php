@@ -8,7 +8,7 @@ class Admin extends CI_Controller
         parent::__construct();
         $this->load->model(['ModelProduk', 'ModelUser', 'ModelKategori']);
         cek_login();
-        cek_user();
+        // cek_user();
     }
 
     public function index()

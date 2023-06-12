@@ -34,7 +34,6 @@ class Autentifikasi extends CI_Controller
         $password = $this->input->post('password', true);
 
         $user = $this->ModelUser->cekData(['email_user' => $email])->row_array();
-
         //jika usernya ada
         if ($user) {
             //jika user sudah aktif
@@ -44,12 +43,17 @@ class Autentifikasi extends CI_Controller
                     $data = [
                         'email' => $user['email_user'],
                         'role_id' => $user['role_id'],
-                        'id_user' => $user['id'],
+                        'id_user' => $user['user_id'],
                     ];
 
                     $this->session->set_userdata($data);
                     //Diarahkan ke controller admin
-                    redirect('admin');
+                    if($user['role_id']== "1"){
+                        redirect('admin');
+                    }else{
+                        redirect('staff');
+                    }
+                    
                 } else {
                     $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-message" role="alert">Password salah!!</div>');
                     redirect('autentifikasi');
@@ -109,7 +113,7 @@ class Autentifikasi extends CI_Controller
                 'email_user' => htmlspecialchars($email),
                 'foto_user' => 'default.jpg',
                 'password_user' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
-                'role_id' => 1,
+                'role_id' => 2,
                 'is_active' => '1',
                 'tanggal_input' => time()
             ];

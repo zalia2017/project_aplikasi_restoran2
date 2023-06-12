@@ -10,7 +10,7 @@ class ModelUser extends CI_Model
 
     public function cekData($where = null)
     {
-        $this->db->select('*');
+        $this->db->select('user.*, role.id as role_id, role.*, user.id as user_id');
         $this->db->from('user');
         $this->db->join('role', 'role.id=user.role_id', 'left');
         $this->db->where($where);

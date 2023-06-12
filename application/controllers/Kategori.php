@@ -7,7 +7,7 @@ class Kategori extends CI_Controller
     {
         parent::__construct();
         cek_login();
-        cek_user();
+        // cek_user();
     }
     /**
      * 4 Method

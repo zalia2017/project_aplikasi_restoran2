@@ -4,13 +4,6 @@ if(!defined('BASEPATH')) exit ('No direct script allowed');
 
 class ModelPesanan extends CI_Model
 {
-  public function getTemp()
-  {
-    $this->db->select('temp.*, produk.id, produk.nama_produk, produk.satuan_produk, produk');
-    $this->db->from('temp');
-    $this->db->join('produk', 'produk.id=temp.id_produk', 'left');
-    return $this->db->get();
-  }
   public function getTempWhere($where)
   {
     $this->db->select('temp.*,produk.id as produk_id, produk.nama_produk, produk.satuan_produk, produk.harga_produk');
@@ -21,31 +14,69 @@ class ModelPesanan extends CI_Model
   }
   public function getPesanan()
   {
-    $this->db->select('pesanan.*');
+    //Pilih semua kolom pada tabel pesanan dan kolom nama_user pada tabel user
+    $this->db->select('pesanan.*, user.nama_user');
+    //Dari tabel pesanan
     $this->db->from('pesanan');
-    $this->db->join('produk', 'produk.id=user.role_id', 'left');
+    //Join dengan tabel user dimana id dari user = id_kasir dari tabel pesanan, LEFT JOIN
+    $this->db->join('user', 'user.id=pesanan.id_kasir', 'left');
+    //Diurutkan berdasarkan tgl_pesanan secara Descending
+    $this->db->order_by('tgl_pesanan', 'desc');
+    //Diurutkan berdasarkan waktu_pesanan secara Ascending
+    $this->db->order_by('waktu_pesanan', 'asc');
+    //Di return untuk mendapatkan hasil query di atas
     return $this->db->get();
   }
   public function getPesananWhere($where)
   {
-    return $this->db->get_where('pesanan', $where);
+    $this->db->select('pesanan.*, user.nama_user');
+    $this->db->from('pesanan');
+    $this->db->join('user', 'user.id=pesanan.id_kasir', 'left');
+    $this->db->where($where);
+    return $this->db->get();
   }
+  public function getDetailPesananWhere($where)
+  {
+    $this->db->select('detail_pesanan.*, produk.*, produk.id as produk_id, pesanan.*, user.nama_user');
+    $this->db->from('detail_pesanan');
+    $this->db->join('produk', 'produk.id=detail_pesanan.id_produk', 'left');
+    $this->db->join('pesanan', 'pesanan.no_pesanan=detail_pesanan.no_pesanan', 'left');
+    $this->db->join('user', 'user.id=pesanan.id_kasir', 'left');
+    //Diurutkan berdasarkan no_pesanan pada tabel detail_pesanan
+    $this->db->order_by('detail_pesanan.no_pesanan', 'asc');
+    //Diurutkan berdasarkan id_produk
+    $this->db->order_by('id_produk', 'asc');
+    //Dimana dsesuaikan dengan permintaan sebelumnya
+    $this->db->where($where);
+    return $this->db->get();
+  }
+  // public function getPesanan()
+  // {
+  //   $this->db->select('pesanan.*');
+  //   $this->db->from('pesanan');
+  //   $this->db->join('produk', 'produk.id=user.role_id', 'left');
+  //   return $this->db->get();
+  // }
+  // public function getPesananWhere($where)
+  // {
+  //   return $this->db->get_where('pesanan', $where);
+  // }
   public function simpanData($table, $data = null)
   {
     return $this->db->insert($table, $data);
   }
 
-  public function getDetailPesananWhere($where)
+  // public function getDetailPesananWhere($where)
+  // {
+  //   $this->db->select('detail_pesanan.*,produk.id as produk_id, produk.nama_produk, produk.satuan_produk, produk.harga_produk');
+  //   $this->db->from('detail_pesanan');
+  //   $this->db->join('produk', 'produk.id=detail_pesanan.id_produk', 'left');
+  //   $this->db->where($where);
+  //   return $this->db->get();
+  // }
+  public function updatePesananWhere($data, $where)
   {
-    $this->db->select('detail_pesanan.*,produk.id as produk_id, produk.nama_produk, produk.satuan_produk, produk.harga_produk');
-    $this->db->from('detail_pesanan');
-    $this->db->join('produk', 'produk.id=detail_pesanan.id_produk', 'left');
-    $this->db->where($where);
-    return $this->db->get();
-  }
-  public function updateData($table, $data, $where)
-  {
-    $this->db->update($table, $data, $where);
+    $this->db->update("pesanan", $data, $where);
   }
 
   public function getOrderByLimit($table, $order, $limit)

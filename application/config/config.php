@@ -53,6 +53,7 @@ $config['base_url'] = $root;
 |
 */
 $config['index_page'] = '';
+date_default_timezone_set('Asia/Jakarta');
 
 /*
 |--------------------------------------------------------------------------

@@ -11,12 +11,15 @@ class User extends CI_Controller
 
     public function index()
     {
+    
         $data['judul'] = 'Profil Saya';
+        //Akan mengecek data-data saya berdasarkan session email
         $data['user'] = $this->ModelUser->cekData(['email_user' => $this->session->userdata('email')])->row_array();
-
+        // var_dump($data['user']);
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar', $data);
+        //$data['user'] akan dilempar ke view admin/user/index
         $this->load->view('admin/user/index', $data);
         $this->load->view('templates/footer');
     }
@@ -45,12 +48,15 @@ class User extends CI_Controller
         
 
         if ($this->form_validation->run() == false) {
+
+            //Pertama kali dijalankan ketika menampilkan data user
             $this->load->view('templates/header', $data);
             $this->load->view('templates/sidebar', $data);
             $this->load->view('templates/topbar', $data);
             $this->load->view('admin/user/ubah-profile', $data);
             $this->load->view('templates/footer');
         } else {
+            //Kalau validasi run true
             $nama = $this->input->post('nama', true);
             $email = $this->input->post('email', true);
 

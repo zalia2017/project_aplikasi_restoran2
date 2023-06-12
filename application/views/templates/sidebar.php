@@ -64,7 +64,7 @@
           <!-- Nav Item - Dashboard -->
           <li class="nav-item active">
           <li class="nav-item">
-            <a href="<?= base_url('pinjam');?>" class="nav-link pb-0"><i class="fa fa-fw fa-shopping-cart"></i>
+            <a href="<?= base_url('pesanan');?>" class="nav-link pb-0"><i class="fa fa-fw fa-shopping-cart"></i>
               <span>Data Pesanan</span></a>
           </li>
             </li>

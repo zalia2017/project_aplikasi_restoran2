@@ -9,74 +9,53 @@
                     <?= validation_errors(); ?>
                 </div>
             <?php } ?>
-            <h1 align="center" class="mb-3">Keranjang Pesanan</h1>
+            <!-- <a href="" class="btn btn-primary mb-3" data-toggle="modal" data-target="#produkBaruModal"><i class="fas fa-file-alt"></i> Tambah Produk</a> -->
             <table class="table table-hover">
                 <thead>
-                    <tr align="center">
+                    <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Nama Produk</th>
-                        <th scope="col">Satuan Produk</th>
-                        <th scope="col">Harga Produk</th>
-                        <th scope="col">Jumlah Beli</th>
+                        <th scope="col">No Pesanan</th>
+                        <th scope="col">Nama Pemesan</th>
+                        <th scope="col">Waktu Pemesanan</th>
+                        <th scope="col">Nomor Meja</th>
                         <th scope="col">Total Harga</th>
-                        <th scope="col">Pilihan</th>
+                        <th scope="col">Total Bayar</th>
+                        <th scope="col">Jenis Bayar</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Kasir</th>
                     </tr>
                 </thead>
                 <tbody>
 
                     <?php
                     $a = 1;
-                    $totalItem = 0;
-                    $totalHarga = 0;
-                    foreach ($keranjang as $p) { ?>
+                    foreach ($pesanan as $p) { ?>
                         <tr>
-                            <th scope="row" align="center"><?= $a++; ?></th>
+                            <th scope="row"><?= $a++; ?></th>
                             <td>
-                            <a class="nav-item nav-link" href="<?= base_url('home/produk/'.$p['produk_id']);?>"><b><?= $p['nama_produk']; ?></b></a>  
+                                <?php if($p['status_pesanan'] == 'Dipesan') { ?>
+                                    <a href="<?= base_url('pesanan/detailPesanan/') . $p['no_pesanan']; ?>" style="font-size:14px;" class="badge badge-success p-2">
+                            <?= $p['no_pesanan']; ?></a>
+                                <?php }else{ ?>
+                                    <a href="<?= base_url('pesanan/info/') . $p['no_pesanan']; ?>" style="font-size:14px;" class="badge badge-info p-2">
+                            <?= $p['no_pesanan']; ?></a>
+                            <?php } ?>
                             </td>
-                            <td align="center"><?= $p['satuan_produk']; ?></td>
-                            <td align="right">Rp.<?= $p['harga_produk']; ?></td>
-                            <td align="center"><?= $p['jumlah_beli']; ?></td>
-                            <td align="right">Rp.<?= $p['harga_produk']*$p['jumlah_beli']; ?></td>
+                            <td><?= $p['nama_pemesan']; ?></td>
                             <td>
-                            <a href="<?= base_url('home/hapusPesanan/') . $p['id']; ?>" onclick="return confirm('Kamu yakin akan menghapus Pesanan <?= $p['nama_produk']; ?> ?');" class="badge badge-danger p-2"><i class="fas fa-trash"></i> Hapus</a>
-
+                                <?= $p['tgl_pesanan']; ?>
+                                (<?= $p['waktu_pesanan'];?>)
                             </td>
+                            <td><?= $p['no_meja']; ?></td>
+                            <td><?= $p['total_harga']; ?></td>
+                            <td><?= $p['total_bayar']; ?></td>
+                            <td><?= $p['jenis_bayar']; ?></td>
+                            <td><?= $p['status_pesanan']; ?></td>
+                            <td><?= $p['nama_user']; ?></td>
                         </tr>
-                    <?php 
-                      $totalItem = $totalItem+$p['jumlah_beli'];
-                      $totalHarga = $totalHarga+($p['harga_produk']*$p['jumlah_beli']);
-                    } ?>
-                    <tr style="background-color:gray;padding:10px;color:white;">
-                      <td colspan="4" align="center"><b>Grand Total :</b></td>
-                      <td align="center"><?=$totalItem;?></td>
-                      <td align="right">Rp.<?= number_format($totalHarga,0,',','.');?></td>
-                      <td></td>
-                    </tr>
-                    <tr style="padding:10px;">
-                      <td colspan="5" align="right"><b>Pembayaran :</b></td>
-                      <td colspan="2"><input type="radio"> Cash &nbsp;
-                          <input type="radio"> Kartu Kredit/Debet
-                    </td>
-                    </tr>
-                    <tr style="padding:10px;">
-                      <td colspan="5" align="right"><b>Jumlah Bayar :</b></td>
-                      <td colspan="2"><input type="number" class="form-control">
-                    </td>
-                    </tr>
-                    <tr style="padding:10px;">
-                      <td colspan="5" align="right"><b>Kembali :</b></td>
-                      <td colspan="2"><input type="number" class="form-control">
-                    </td>
-                    </tr>
-
+                    <?php } ?>
                 </tbody>
             </table>
-            <a class="btn btn-sm btn-outline-primary" href="<?=base_url();?>"><span
-              class="fas fw fa-play"></span> Lanjutkan Pemesanan</a>
-          <a class="btn btn-sm btn-outline-success"
-            href="<?= base_url() . 'home/pesananSelesai/'. $this->session->userdata('id_user');?>"><span
-              class="fas fw fa-stop"></span> Selesaikan Pesanan</a>
         </div>
     </div>
 
@@ -85,3 +64,48 @@
 
 </div>
 <!-- End of Main Content -->
+
+<!-- Modal Tambah kategori baru-->
+<div class="modal fade" id="produkBaruModal" tabindex="-1" role="dialog" aria-labelledby="kategoriBaruModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ProdukBaruModalLabel">Tambah Produk</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="<?= base_url('produk/tambahProduk'); ?>" method="post"  enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" name="produk" id="produk" placeholder="Masukkan Nama Produk" class="form-control form-control-user">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="satuan" id="satuan" placeholder="Masukkan Satuan Produk" class="form-control form-control-user">
+                    </div>
+                    <div class="form-group">
+                        <input type="number" name="harga" id="harga" placeholder="Masukkan Harga Produk" class="form-control form-control-user">
+                    </div>
+                    <div class="form-group">
+                        <textarea name="deskripsi" id="deskripsi" placeholder="Masukkan Deskripsi Produk" class="form-control form-control-user"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <select name="kategori" id="kategori" placeholder="Masukkan Kategori Produk" class="form-control form-control-user">
+                        <?php foreach($kategori as $kategori):?>
+                            <option value="<?= $kategori['id'];?>"><?= $kategori['nama_kategori'];?></option>
+                        <?php endforeach;?>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="file" class="form-control form-control-user" id="image" name="image">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-ban"></i> Close</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Tambah</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End of Modal Tambah Mneu -->

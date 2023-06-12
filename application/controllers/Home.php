@@ -159,7 +159,7 @@ class Home extends CI_Controller
   {
     $data['kategori'] = $this->ModelKategori->getKategori()->result();
     $noPesanan = $this->uri->segment(3);
-    $data['pesanan'] = $this->ModelPesanan->getDetailPesananWhere(['no_pesanan' => $noPesanan])->result_array();
+    $data['pesanan'] = $this->ModelPesanan->getDetailPesananWhere(['detail_pesanan.no_pesanan' => $noPesanan])->result_array();
     $headerPesanan = $this->ModelPesanan->getPesananWhere(['no_pesanan' => $noPesanan])->row();
     //Menampilkan data2 yang akan dimunculkan di info pemesanan
     $data['no_meja'] = $headerPesanan->no_meja;
@@ -194,7 +194,7 @@ class Home extends CI_Controller
       //Dalam bentuk result_array()
       //Ditampilkan banyak data(record) dalam bentuk array, ditampilkan menggunakan looping (foreach)
       //Menampilkannya sebagai contoh $pesanan['no_pesanan']
-      $data['pesanan'] = $this->ModelPesanan->getDetailPesananWhere(['no_pesanan' => $noPesanan])->result_array();
+      $data['pesanan'] = $this->ModelPesanan->getDetailPesananWhere(['detail_pesanan.no_pesanan' => $noPesanan])->result_array();
       //Untuk menampilkan data dari tabel pesanan dalam bentuk row
       //Menampilkan satu data(record) teratas dari query dalam bentuk object
       //Menampilkannya sebagai contoh: $headerPesanan->nama_pemesan 
