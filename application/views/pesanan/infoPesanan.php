@@ -71,8 +71,8 @@
             <tr>
                 <td>
                 <a class="btn btn-sm btn-outline-danger" target="_blank"
-                        href="<?php echo base_url() . 'home/exportPesananToPdf/'.$no_pesanan; ?>"><span
-                            class="far fa-lg fa-fw fa-file-pdf"></span>Cetak Pdf</a>
+                        href="<?php echo base_url() . 'home/cetakPesanan/'.$no_pesanan; ?>"><span
+                            class="far fa-lg fa-fw fa-printer"></span>Cetak Pesanan</a>
                 </td>
             </tr>
         </table>

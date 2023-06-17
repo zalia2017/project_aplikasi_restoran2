@@ -24,6 +24,8 @@ class Autentifikasi extends CI_Controller
             $this->load->view('autentifikasi/login');
             $this->load->view('templates/aute_footer');
         } else {
+            //Jika validasinya bernilai TRUE
+            //Maka akan menjalankan method _login
             $this->_login();
         }
     }
@@ -40,6 +42,7 @@ class Autentifikasi extends CI_Controller
             if ($user['is_active'] == '1') {
                 //cek password
                 if (password_verify($password, $user['password_user'])) {
+                    //Menyiapkan data untuk disimpan ke dalam session
                     $data = [
                         'email' => $user['email_user'],
                         'role_id' => $user['role_id'],
@@ -59,7 +62,7 @@ class Autentifikasi extends CI_Controller
                     redirect('autentifikasi');
                 }
             } else {
-                $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-message" role="alert">User belum diaktifasi!!</div>');
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-message" role="alert">User belum diaktivasi!!</div>');
                 redirect('autentifikasi');
             }
         } else {

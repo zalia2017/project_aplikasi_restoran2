@@ -35,6 +35,7 @@ class Home extends CI_Controller
   //Memunculkan produk dari kategori yang dipilih
   public function kategori()
     {
+      //Untuk mendapatkan parameter id dari kategori
         $idKategori = $this->uri->segment(3);
         $namaKategori = $this->ModelKategori->getKategoriWhere(['id'=>$idKategori])->row()->nama_kategori;
         $data['judul'] = $namaKategori;
@@ -52,8 +53,11 @@ class Home extends CI_Controller
     //Memunculkan detail produk
     public function produk()
     {
+      //Untuk mendapatkan id produk
         $idProduk = $this->uri->segment(3);
+        //Untuk mendapatkan nama produk
         $namaProduk = $this->ModelProduk->getProdukWhere(['produk.id'=>$idProduk])->row()->nama_produk;
+        //Nama Produk akan diletakkan dijudul
         $data['judul'] = $namaProduk;
         // Untuk memunculkan semua kategori pada menu di header
         $data['kategori'] = $this->ModelKategori->getKategori()->result();
@@ -72,7 +76,9 @@ class Home extends CI_Controller
       $idSession = $this->session->userdata('my_session_id');
       //Jika idSession kosong
       if(!isset($idSession)){
+        //akan membuat satu nomor unique baru
         $uniqueId = uniqid(rand(), TRUE);
+        //Disimpan kedalam session my_session_id
         $this->session->set_userdata("my_session_id", md5($uniqueId));
         $idSession = $uniqueId;
       }
@@ -119,25 +125,37 @@ class Home extends CI_Controller
   //Proses memindahkan data dari tabel temp (keranjang) ke tabel pesanan dan detail_pesanan
   public function pesananSelesai()
   {
+    //Untuk mendapatkan session my_session_id dari komputer tersebut
     $idSession = $this->session->userdata('my_session_id');
     $tglsekarang = date('Y-m-d');
+    //Untuk mendapatkan data kategori
     $data['kategori'] = $this->ModelKategori->getKategori()->result();
 
+    //Untuk mendapatkan detail pesanan pada tabel temp(keranjang)
     $detailPesanan = $this->ModelPesanan->getTempWhere(['id_session' => $idSession])->result_array();
+    //Untuk mendapatkan kode otomatis untuk no_pesanan
     $kodeOtomatis = $this->ModelPesanan->kodeOtomatis('pesanan', 'no_pesanan');
+    //Untuk mendapatkan nama pemesan dari form
     $namaPemesan = $this->input->post('namaPemesan');
+    //Untuk mendapatkan nomor meja dari form
     $noMeja = $this->input->post('noMeja');
+    //Untuk mendapatkan total harga
+    $totalHarga = $this->input->post('totalHarga');
+    //Isi pesanan didapatkan dari data-data diatas
     $isiPesanan = [
       'no_pesanan' => $kodeOtomatis,
       'tgl_pesanan' => date('Y-m-d H:m:s'),
-      'total_harga' => $this->input->post('totalHarga'),
+      'total_harga' => $totalHarga,
       'waktu_pesanan' => date('H:m:s'),
       'nama_pemesan' => $namaPemesan,
       'no_meja' => $noMeja
     ];
-
+    //Memasukkan data kedalam tabel pesanan dari data diatas
     $this->ModelPesanan->insertData('pesanan', $isiPesanan);
+
     //Dari tabel temp akan dimasukkan ke dalam tabel detail_pesanan
+    //Dengan looping atau perulangan, maka data dari temporary berdasarkan session my_session_id
+    //Akan disimpan ke dalam tabel detail_pesanan
     foreach($detailPesanan as $detail){
       $isiDetail = [
         'no_pesanan' => $kodeOtomatis,
@@ -146,6 +164,7 @@ class Home extends CI_Controller
         'harga_produk' => $detail['harga_produk'],
         'total_harga' => $detail['jumlah_beli'] * $detail['harga_produk'],
       ];
+      //Akan disimpan ke dalam tabel detail_pesanan
       $this->ModelPesanan->insertData('detail_pesanan', $isiDetail);
     }
     //Menghapus data dari tabel temp, sesuai idSessionnya
@@ -185,6 +204,26 @@ class Home extends CI_Controller
     }else{
       redirect('home/pesanan');
     }
+  }
+
+  public function cetakPesanan(){
+      $noPesanan = $this->uri->segment(3);
+      //Menampilkan data dari tabel detail_pesanan sesuai nomer pesanan
+      //Dalam bentuk result_array()
+      //Ditampilkan banyak data(record) dalam bentuk array, ditampilkan menggunakan looping (foreach)
+      //Menampilkannya sebagai contoh $pesanan['no_pesanan']
+      $data['pesanan'] = $this->ModelPesanan->getDetailPesananWhere(['detail_pesanan.no_pesanan' => $noPesanan])->result_array();
+      //Untuk menampilkan data dari tabel pesanan dalam bentuk row
+      //Menampilkan satu data(record) teratas dari query dalam bentuk object
+      //Menampilkannya sebagai contoh: $headerPesanan->nama_pemesan 
+      $headerPesanan = $this->ModelPesanan->getPesananWhere(['no_pesanan' => $noPesanan])->row();
+      //data headerPesanan dipecah kedalam masing-masing kolom dan disimpan dalam $data
+      $data['no_meja'] = $headerPesanan->no_meja;
+      $data['nama_pemesan'] = $headerPesanan->nama_pemesan;
+      $data['no_pesanan'] = $noPesanan;
+
+      $this->load->view('pesanan/bukti-cetak', $data);
+
   }
   //Untuk mengeksport data pesanan ke dalam pdf
   public function exportPesananToPdf()

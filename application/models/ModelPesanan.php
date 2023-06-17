@@ -79,6 +79,11 @@ class ModelPesanan extends CI_Model
     $this->db->update("pesanan", $data, $where);
   }
 
+  public function updateData($table, $data, $where)
+  {
+    $this->db->update($table, $data, $where);
+  }
+
   public function getOrderByLimit($table, $order, $limit)
   {
     $this->db->order_by($order, 'desc');
