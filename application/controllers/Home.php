@@ -178,6 +178,7 @@ class Home extends CI_Controller
   {
     $data['kategori'] = $this->ModelKategori->getKategori()->result();
     $noPesanan = $this->uri->segment(3);
+    $data['judul'] = 'Data Detail Pesanan';
     $data['pesanan'] = $this->ModelPesanan->getDetailPesananWhere(['detail_pesanan.no_pesanan' => $noPesanan])->result_array();
     $headerPesanan = $this->ModelPesanan->getPesananWhere(['no_pesanan' => $noPesanan])->row();
     //Menampilkan data2 yang akan dimunculkan di info pemesanan

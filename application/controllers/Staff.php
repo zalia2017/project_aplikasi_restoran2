@@ -22,7 +22,8 @@ class Staff extends CI_Controller
         //Menampilkan nama pada topbar
         $data['user'] = $this->ModelUser->cekData(['email_user' => $this->session->userdata('email')])->row_array();
         //Menampilkan detail pesanan dimana status pesanannya adalah bukan Dipesan
-        $data['detail_pesanan'] = $this->ModelPesanan->getDetailPesananWhere(['pesanan.status_pesanan !=' =>'Dipesan'])->result_array();
+        // $data['detail_pesanan'] = $this->ModelPesanan->getDetailPesananWhere(['pesanan.status_pesanan !=' =>'Dipesan'])->result_array();
+        $data['detail_pesanan'] = $this->ModelPesanan->getTodayDetailPesananWhere(['pesanan.status_pesanan !=' =>'Dipesan'])->result_array();
         $this->load->view('templates/header', $data);
         // $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar', $data);

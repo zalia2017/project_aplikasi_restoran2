@@ -65,7 +65,7 @@
                         <?=$p['nama_produk']; ?></b>
                     </td>
                     <td align="center"><?= $p['satuan_produk']; ?></td>
-                    <td align="right">Rp.<?= $p['harga_produk']; ?></td>
+                    <td align="right">Rp.<?= number_format($p['harga_produk'],0,',','.'); ?></td>
                     <td align="center"><?= $p['jumlah_beli']; ?></td>
                     <td align="right">Rp.<?= number_format($p['harga_produk']*$p['jumlah_beli'], 0, ',','.'); ?></td>
                 </tr>
@@ -75,8 +75,8 @@
                     } ?>
                 <tr>
                     <td colspan="4" align="center"><b>Grand Total :</b></td>
-                    <td align="center"><?=$totalItem;?></td>
-                    <td align="right">Rp.<?= number_format($totalHarga,0,',','.');?></td>
+                    <td align="center"><b><?=$totalItem;?></b></td>
+                    <td align="right"><b>Rp.<?= number_format($totalHarga,0,',','.');?></b></td>
                 </tr>
             </table>
         </td>

@@ -49,6 +49,11 @@
 <!-- Custom scripts for all pages-->
 <script src="<?= base_url('assets/'); ?>js/sb-admin-2.min.js"></script>
 
+<!-- Page level plugins -->
+<script src="<?= base_url('assets/');?>vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="<?= base_url('assets/');?>vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+
 <script>
 // $('.custom-file-input').on('change', function() {
 //     let fileName = $(this).val().split('\\').pop();
@@ -73,7 +78,8 @@
 //     });
 // });
 $(document).ready(function() {
-    // $("#table-datatable").dataTable();
+    //Menggunakan library data table pada element id table-datatable
+    $("#table-datatable").DataTable();
     //Jalankan perintah ketika element dengan id Jumlah bayar ada aksi keyboard keyup.
     $("#jumlahBayar").keyup(function() {
         //Aksi yang akan dijalankan

@@ -80,19 +80,19 @@
 
           <li class="nav-item active">
           <li class="nav-item">
-            <a class="nav-link pb-0" href="<?= base_url('laporan/laporan_buku');?>">
+            <a class="nav-link pb-0" href="<?= base_url('laporan/laporan_kategori');?>">
               <i class="fa fa-fw fa-address-book"></i>
               <span>Laporan Data Kategori</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link pb-0" href="<?= base_url('laporan/laporan_anggota');?>">
+            <a class="nav-link pb-0" href="<?= base_url('laporan/laporan_produk');?>">
               <i class="fa fa-fw fa-address-book"></i>
               <span>Laporan Data Produk</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link pb-0" href="<?= base_url('laporan/laporan_pinjam');?>">
+            <a class="nav-link pb-0" href="<?= base_url('laporan/laporan_pesanan');?>">
               <i class="fa fa-fw fa-address-book"></i>
               <span>Laporan Data Pesanan</span>
             </a>

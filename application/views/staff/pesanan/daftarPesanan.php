@@ -9,12 +9,14 @@
                 <?= validation_errors(); ?>
             </div>
             <?php } ?>
-            <!-- <a href="" class="btn btn-primary mb-3" data-toggle="modal" data-target="#produkBaruModal"><i class="fas fa-file-alt"></i> Tambah Produk</a> -->
-            <table class="table table-hover table-striped table-bordered">
+            <h5>Tanggal : <?= date('d M Y');?></h5>
+            <hr/>
+            <table class="table table-hover table-striped table-bordered" id="table-datatable">
                 <thead>
                     <tr align="center">
                         <th scope="col">#</th>
                         <th scope="col">No Pesanan</th>
+                        <th scope="col">Nama Pemesan</th>
                         <th scope="col">Nama Produk</th>
                         <th scope="col">Waktu Pemesanan</th>
                         <th scope="col">Nomor Meja</th>
@@ -33,10 +35,12 @@
                         <td>
                             <?= $p['no_pesanan']; ?>
                         </td>
-                        <td><b><?= $p['nama_produk']; ?></b></td>
                         <td>
-                            <?= $p['tgl_pesanan']; ?>
-                            (<?= $p['waktu_pesanan'];?>)
+                            <?= $p['nama_pemesan'];?>
+                        </td>
+                        <td><b><?= $p['nama_produk']; ?></b></td>
+                        <td align="center">
+                            <?= $p['waktu_pesanan'];?>
                         </td>
                         <td align="center"><b><?= $p['no_meja']; ?></b></td>
                         <td align="center" style="font-weight:bold" <?php if($p['status_pesanan'] == "Dibayar") {?>

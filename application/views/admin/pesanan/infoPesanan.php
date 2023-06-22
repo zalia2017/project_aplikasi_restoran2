@@ -43,9 +43,9 @@
 <b><?= $p['nama_produk']; ?></b>
                         </td>
                         <td align="center"><?= $p['satuan_produk']; ?></td>
-                        <td align="right">Rp.<?= $p['harga_produk']; ?></td>
+                        <td align="right">Rp.<?= number_format($p['harga_produk'],0,',','.'); ?></td>
                         <td align="center"><?= $p['jumlah_beli']; ?></td>
-                        <td align="right">Rp.<?= $p['harga_produk']*$p['jumlah_beli']; ?></td>
+                        <td align="right">Rp.<?= number_format($p['harga_produk']*$p['jumlah_beli'],0,',','.'); ?></td>
                     </tr>
                     <?php 
                       $totalItem = $totalItem+$p['jumlah_beli'];
@@ -69,13 +69,13 @@
                     <tr style="padding:10px;">
                         <td colspan="5" align="right"><b>Jumlah Bayar :</b></td>
                         <td align="right">
-                        <?=$pesanan['total_bayar'];?>
+                        <?= number_format($pesanan['total_bayar'],0,',','.');?>
                         </td>
                     </tr>
                     <tr style="padding:10px;">
                         <td colspan="5" align="right"><b>Kembali :</b></td>
                         <td align="right">
-                            <?=$pesanan['total_bayar']-$pesanan['total_harga'];?>
+                            <?= number_format($pesanan['total_bayar']-$pesanan['total_harga'],0,',','.');?>
                         </td>
                     </tr>
                     <tr>

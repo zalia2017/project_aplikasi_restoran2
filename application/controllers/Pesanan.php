@@ -25,8 +25,22 @@ class Pesanan extends CI_Controller
     {
       //Untuk memberikan judul pada tab browser
         $data['judul'] = 'Daftar Pesanan';
+        $submit = $this->input->post('submit', TRUE);
         //Untuk menampilkan data dari tabel pesanan
-        $data['pesanan'] = $this->ModelPesanan->getPesanan()->result_array();
+        // $data['pesanan'] = $this->ModelPesanan->getPesanan()->result_array();
+        $tglMulai = $this->input->post('tglMulai', TRUE);
+        $tglSelesai = $this->input->post('tglSelesai', TRUE);
+        
+        if($submit == "Reset" || $submit == NULL){
+          //Jika tanggal mulai adalah kosong maka akan menampilkan pesanan hari ini
+          $data['pesanan'] = $this->ModelPesanan->getTodayPesanan()->result_array();
+          $data['tanggal'] = date('d M Y');
+        }else{
+          //Jika tanggal mulai diisi maka akan menampilkan pesanan sesuai pencarian
+          $data['pesanan'] = $this->ModelPesanan->getPesananBySearch($tglMulai, $tglSelesai)->result_array();
+          $data['tanggal'] = date("d M Y", strtotime($tglMulai)) ." s.d ". date("d M Y", strtotime($tglSelesai));
+        }
+        
         //Untuk menampilkan nama user pada topbar
         $data['user'] = $this->ModelUser->cekData(['email_user' => $this->session->userdata('email')])->row_array();
 

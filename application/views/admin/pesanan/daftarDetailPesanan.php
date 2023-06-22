@@ -38,9 +38,9 @@
                                 href="<?= base_url('home/produk/'.$p['produk_id']);?>"><b><?= $p['nama_produk']; ?></b></a>
                         </td>
                         <td align="center"><?= $p['satuan_produk']; ?></td>
-                        <td align="right">Rp.<?= $p['harga_produk']; ?></td>
+                        <td align="right">Rp.<?= number_format($p['harga_produk'],0,',','.'); ?></td>
                         <td align="center"><?= $p['jumlah_beli']; ?></td>
-                        <td align="right">Rp.<?= $p['harga_produk']*$p['jumlah_beli']; ?></td>
+                        <td align="right">Rp.<?= number_format($p['harga_produk']*$p['jumlah_beli'],0,',','.'); ?></td>
                     </tr>
                     <?php 
                       $totalItem = $totalItem+$p['jumlah_beli'];

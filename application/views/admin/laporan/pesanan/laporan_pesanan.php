@@ -1,6 +1,6 @@
 <!-- Begin Page Content -->
 <div class="row">
-    
+
 
     <?= $this->session->flashdata('pesan'); ?>
     <div class="container-fluid">
@@ -10,9 +10,9 @@
                 <?= validation_errors(); ?>
             </div>
             <?php } ?>
-            <form action="<?= base_url('pesanan'); ?>" method="post">
-            <div class="row">
-                
+            <form action="<?= base_url('laporan/laporan_pesanan'); ?>" method="post">
+                <div class="row">
+
                     <div class="col-12 col-sm-4">
                         <input type="date" class="form-control" name="tglMulai" placeholder="Tanggal Mulai">
                     </div>
@@ -20,18 +20,39 @@
                         <input type="date" class="form-control" name="tglSelesai" placeholder="Tanggal Selesai">
                     </div>
                     <div class="col-12 col-sm-2">
-                        <input type="submit" name="submit" value="Cari" class="btn btn-primary col-12"/>
+                        <input type="submit" name="submit" value="Cari" class="btn btn-primary col-12" />
                     </div>
                     <div class="col-12 col-sm-2">
-                        <input type="submit" name="submit" value="Reset" class="btn btn-dark col-12"/>
+                        <input type="submit" name="submit" value="Reset" class="btn btn-dark col-12" />
                     </div>
-                
-            </div>
+
+                </div>
             </form>
-            <hr/>
+            <hr />
             <h5 align="left">Tanggal : <?= $tanggal;?></h5>
-            <hr/>
-            <!-- <a href="" class="btn btn-primary mb-3" data-toggle="modal" data-target="#produkBaruModal"><i class="fas fa-file-alt"></i> Tambah Produk</a> -->
+            <hr />
+            <?php 
+                if($tgl_mulai == ""){ ?>
+                    <a target="_blank" href="<?= base_url('laporan/cetak_laporan_pesanan'); ?>" class="btn btn-primary mb-3"><i
+                            class="fas fa-print"></i>
+                        Print
+                    </a>
+                <?php }else{ ?>
+                    <a target="_blank" href="<?= base_url('laporan/cetak_laporan_pesanan/'.$tgl_mulai.'/'.$tgl_selesai); ?>" class="btn btn-primary mb-3"><i
+                            class="fas fa-print"></i>
+                        Print
+                    </a>
+                <?php } ?>
+            <!-- Tombol kedua untuk cetak dalam bentuk pdf -->
+            <a target="_blank" href="<?= base_url('laporan/laporan_produk_pdf'); ?>" class="btn btn-warning mb-3"><i
+                    class="far fa-file-pdf"></i>
+                Download Pdf
+            </a>
+            <!-- Tombol ketiga untuk cetak dalam bentuk excel -->
+            <a href="<?= base_url('laporan/export_excel_produk'); ?>" class="btn btn-success mb-3"><i
+                    class="far fa-file-excel"></i>
+                Export ke Excel
+            </a>
             <div class="table-responsive">
                 <table class="table table-hover" id="table-datatable">
                     <thead>
